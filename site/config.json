@@ -1,6 +1,6 @@
 {
   "site_name": "HagiiZ 災害レビュー",
   "base_url": "",
-  "api": "",
+  "api": "https://script.google.com/macros/s/AKfycbz-c8MQ6m3dJx0KAGbwwPm-JT-zWR06E1kV85jrrxkrTV8svVZsB7GpIcHHa-MR2-GZ3A/exec",
   "_説明": "base_url：公開するアドレス（例 https://review.hagiiz.com）。api：答えの受け皿（Apps ScriptのウェブアプリURL）。空なら試作モード。"
 }
