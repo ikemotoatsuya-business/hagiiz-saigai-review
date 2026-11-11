@@ -1,0 +1,8 @@
+{
+  "name": "hagiiz-saigai-review",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./out_site",
+    "not_found_handling": "404-page"
+  }
+}
