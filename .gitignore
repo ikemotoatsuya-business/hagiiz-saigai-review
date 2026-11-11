@@ -1,0 +1,6 @@
+out_site/
+out_preview/
+__pycache__/
+*.pyc
+.DS_Store
+~$*.xlsx
