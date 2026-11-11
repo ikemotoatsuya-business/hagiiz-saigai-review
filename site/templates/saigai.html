@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import "_m.html" as m %}
+{% set law = d.laws[0] if d.laws else None %}
+{% block main %}
+<section class="hero">
+<img src="{{ asset('img/' ~ d.img ~ '.jpg') }}" alt="{{ d.種類 }}を表す図（画像生成）" width="596" height="796">
+<span class="hero__scan" aria-hidden="true"></span>
+<span class="hero__badge"><span class="blink">●</span> 公開中</span>
+<div class="hero__txt">
+<a class="label label--ink" href="{{ url('saigai/') }}" style="text-decoration:none">← 災害ファイル</a>
+<span class="label label--ink mono">FILE / {{ d.発生年月日|replace('-', '.') }} / {{ d.種類 }}</span>
+<h1 class="h1 glitch"><span>{{ d.name }}</span></h1>
+</div>
+</section>
+{{ m.urgency(d) }}
+<div class="wrap">
+<section class="sec">
+<h2 class="h2">この災害を、8つの入口から</h2>
+<div class="cards cards--entry">
+{% if law %}{{ m.entry(url('hou/' ~ law.公開用の名前 ~ '/') ~ '#video', '防災士の解説動画', 'HagiiZの防災士が、この災害と' ~ law.法律名 ~ 'を語る。', '▶', 'ink', 'M12 10h76v56H12z M42 24l22 14-22 14z') }}{% endif %}
+{{ m.entry(url('toi/'), '未来への問い', '答えを待っている問い。根拠を選んで答えよう。', d.qs|length, 'pink', 'M50 6L92 74H8z M50 30v22 M50 60v4') }}
+{{ m.entry(url('saigai/' ~ d.公開用の名前 ~ '/konkyo/'), '根拠カード', '答えるときに使う、一次資料からつくったカード。', d.cards|length, 'tint', 'M14 22h52v52H14z M26 10h52v52') }}
+{{ m.entry(url('saigai/' ~ d.公開用の名前 ~ '/suuji/'), '資料によって違う数字', '同じ被害でも、資料によって数字が違う。', d.n_nums, 'white', 'M10 72h80 M18 72V34h18v38 M50 72V12h18v60') }}
+{% if law %}{{ m.entry(url('hou/' ~ law.公開用の名前 ~ '/') ~ '#kokkai', '国会での話し合い', law.法律名 ~ 'ができるまで。', law.timeline|length, 'ink', 'M10 28L50 6l40 22z M20 34v30 M40 34v30 M60 34v30 M80 34v30 M8 72h84') }}{% endif %}
+{{ m.entry(url('saigai/' ~ d.公開用の名前 ~ '/ima/'), '被災した地域は、いま', '当時の町は、いまどの市町村？ 防災の計画へ。', d.munis|length, 'pink', 'M50 74C30 48 26 40 26 30a24 24 0 0 1 48 0c0 10-4 18-24 44z M50 22a8 8 0 1 0 .1 0') }}
+{{ m.entry(url('saigai/' ~ d.公開用の名前 ~ '/shiryo/'), '資料', '報告書、論文、記録集、伝承碑。どこにあるか。', d.sources|length, 'white', 'M14 22h52v52H14z M26 10h52v52 M24 36h32 M24 48h32') }}
+{{ m.entry(url('manabu/'), '学ぶ', '防災士のレッスンで、根拠を深く知る。', (law.lessons|length if law else 0), 'tint', 'M16 66L60 22l12 12-44 44-14 2z M54 28l12 12') }}
+</div>
+</section>
+
+<section class="sec">
+<h2 class="h2">答えを待っている問い</h2>
+<div class="qlist">{% for t in d.qs[:3] %}{{ m.qrow(t, url) }}{% endfor %}</div>
+<a class="btn btn--pink btn--big" href="{{ url('toi/') }}" style="margin-top:18px"><span>すべての問い {{ d.qs|length }}件</span><span class="mono">→</span></a>
+</section>
+
+{% if d.phen %}
+<section class="sec">
+<h2 class="h2">この災害で起きた現象</h2>
+{% for p in d.phen %}<a class="linkrow" href="{{ url('kagaku/' ~ p.公開用の名前 ~ '/') }}"><span>{{ p.現象名 }}</span><span class="mono">→</span></a>{% endfor %}
+</section>
+{% endif %}
+</div>
+{% endblock %}

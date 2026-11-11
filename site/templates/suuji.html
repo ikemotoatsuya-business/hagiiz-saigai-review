@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap">
+<a class="crumb" href="{{ url('saigai/' ~ d.公開用の名前 ~ '/') }}"><span class="mono">←</span>{{ d.name }}</a>
+<section class="sec" style="padding-top:8px">
+<span class="label label--line">確定した事実</span>
+<h1 class="h1" style="margin-top:8px">資料によって<br><span class="mark">違う数字</span></h1>
+<p class="lead">要約ではなく、「どの資料が、どの範囲で、何をいくつと言っているか」を並べています。資料によって違う数字は、そのまま並べています。<span class="diff">資料によって違う</span> の印が付いた項目は、数え方や範囲の違いを確かめる手がかりです。</p>
+</section>
+{% for g in d.nums %}
+<section class="sec">
+<h2 class="h2">{{ g.scope }}</h2>
+<div class="ngrid">
+{% for r in g.rows %}
+<div class="ncard">
+<div class="ncard__h"><span>{{ r.k }}</span>{% if r.diff %}<span class="diff">資料によって違う</span>{% endif %}</div>
+<div class="ncard__rows">
+{% for v in r.vals %}
+<div class="ncard__r">
+<span class="ncard__v">{{ v.v }}<span style="font-family:var(--sans);font-size:13px"> {{ v.単位 }}</span></span>
+{% if v.src %}<span class="ncard__src">{% if v.src.URL %}<a href="{{ v.src.URL }}" target="_blank" rel="noopener">{{ v.src.タイトル }}</a>{% else %}{{ v.src.タイトル }}{% endif %}</span>{% endif %}
+{% if v.注記 %}<span class="ncard__note">{{ v.注記 }}</span>{% endif %}
+</div>
+{% endfor %}
+</div>
+</div>
+{% endfor %}
+</div>
+</section>
+{% endfor %}
+<section class="sec">
+{% set nq = (M.qs|selectattr('slug','equalto','awanai-suuji')|first) %}
+<a class="btn btn--pink" href="{{ url('toi/' ~ nq.slug ~ '/' if nq else 'toi/') }}"><span>{{ '「' ~ nq.h ~ '」の問いに答える' if nq else '数字の違いから生まれた問いに答える' }}</span><span class="mono">→</span></a>
+</section>
+</div>
+{% endblock %}

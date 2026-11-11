@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="qhead gridbg">
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<h1 class="h1">このサイトについて</h1>
+<p class="qhead__then">過去の災害を知り、埋もれた課題を掘り起こし、未来の防災のあり方を議論する場です。</p>
+</div>
+</section>
+<div class="wrap" style="max-width:820px">
+<section class="sec">
+<h2 class="h2">ここでできること</h2>
+<p>法律と、そのきっかけになった災害を1つずつ見直します。国や自治体の記録（確定した事実）と、まだ答えの出ていない「未来への問い」を分けて並べます。だれでも、一次資料からつくった「根拠カード」を選んで、未来への問いに答えられます。</p>
+</section>
+<section class="sec" id="rule">
+<h2 class="h2">答えのルール</h2>
+<ol style="padding-left:1.2em;margin:0;display:flex;flex-direction:column;gap:6px">
+<li>根拠カードを1枚以上選んで答えます。根拠のない答えは出せません。</li>
+<li>出した答えは、すぐに載ります。登録はいりません。連絡先も聞きません。</li>
+<li>だれかを名指しで責める書き込み、個人を特定できる書き込み、被災した方々を傷つける書き込みは、知らせがあると自動で隠れ、運営が確認します。</li>
+<li>集まった答えは、担当の防災士が次の動画で取り上げることがあります。取り上げた答えには「防災士が採用」の印が付きます。</li>
+</ol>
+</section>
+<section class="sec">
+<h2 class="h2">中立について</h2>
+<p>運営は原則として中立です。原因を確かめることと、責任を追及することを分けて扱います。ただし、事実は事実として示します。</p>
+</section>
+<section class="sec">
+<h2 class="h2">資料・数字・絵について</h2>
+<p>掲載しているのは、資料そのものではなく、資料の情報と所在（リンク・所蔵先）です。資料の著作権は各発行元にあります。数字は資料ごとにそのまま並べ、違う場合は両方を示します。災害の絵は写真ではなく、災害の種類ごとに画像生成でつくった図です。</p>
+<p>根拠カードと問いの文は、資料を高校生にもわかる言葉に言いかえたものです。正確な表現は、もとの資料で確かめてください。</p>
+</section>
+<section class="sec">
+<h2 class="h2">利用のきまり</h2>
+<ul style="padding-left:1.2em;margin:0">
+<li>ページを読む、リンクをたどる、出典を示して引用することは自由です。</li>
+<li>プログラムによる一括での収集・複製・再配布は禁止します。</li>
+<li>AIの学習のための収集はお断りします。</li>
+</ul>
+</section>
+<section class="sec">
+<h2 class="h2">運営</h2>
+<p>HagiiZ（任意団体）。動画の中身は、担当の防災士が責任を持ちます。</p>
+<a class="btn" href="{{ url('teikyo/') }}"><span>知らせる・提供する</span><span class="mono">→</span></a>
+</section>
+</div>
+{% endblock %}

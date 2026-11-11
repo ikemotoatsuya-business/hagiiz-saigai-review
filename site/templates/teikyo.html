@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="qhead gridbg">
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<h1 class="h1">知らせる・<span class="mark">提供する</span></h1>
+<p class="qhead__then">資料の提供、新しい問いの提案、防災団体の掲載申請、リンク切れの報告を、ここでまとめて受け付けます。</p>
+</div>
+</section>
+<div class="wrap" style="max-width:760px">
+<section class="sec">
+<form class="form" data-teikyo novalidate>
+<label class="field"><span class="field__l">何を知らせますか</span>
+<select class="select" name="kind">
+<option value="">えらんでください</option>
+<option value="資料の提供" data-k="shiryo">資料を提供する（記録集、展示、体験の記録など）</option>
+<option value="問いの提案" data-k="toi">ここにない課題・問いを提案する</option>
+<option value="防災団体の掲載申請" data-k="dantai">防災団体の掲載を申請する</option>
+<option value="リンク切れ" data-k="link">リンク切れを知らせる</option>
+<option value="扱ってほしい災害" data-k="request">扱ってほしい災害を知らせる</option>
+<option value="そのほか" data-k="other">そのほか</option>
+</select></label>
+<label class="field"><span class="field__l">内容</span><textarea class="textarea textarea--strong" name="body" rows="5" maxlength="800" placeholder="例：〇〇町の伊勢湾台風の記録集が、町の図書館にあります。"></textarea></label>
+<label class="field"><span class="field__l">URL・資料の名前・所蔵先（わかれば）</span><input class="input" name="ref" maxlength="300"></label>
+<label class="field"><span class="field__l">地域（わかれば）</span><input class="input" name="area" maxlength="60" placeholder="例：愛知県弥富市"></label>
+<label class="field"><span class="field__l">表示する名前（任意）</span><input class="input" name="name" maxlength="30"></label>
+<label class="field"><span class="field__l">連絡先（任意・公開しません。団体の申請では必要です）</span><input class="input" name="contact" maxlength="120" autocomplete="email"></label>
+<p class="err" data-err hidden role="alert"></p>
+<button class="btn btn--pink btn--big btn--center" type="submit">送る</button>
+<p class="small mute" style="margin:0">いただいた内容は運営が確認してから使います。掲載まで時間がかかることがあります。</p>
+</form>
+<div class="note" data-teikyo-done hidden><b style="font-size:18px">受け取りました。</b><br>運営が確認します。ありがとうございました。</div>
+</section>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="qhead gridbg">
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<span class="label label--line">現象</span>
+<h1 class="h1 glitch" style="margin-top:8px">{{ p.現象名 }}</h1>
+{% set how = (p['仕組みの説明（短く）'] or '')|replace('（下書き）', '') %}
+{% if how %}<p class="qhead__then">{{ how }}</p>{% endif %}
+</div>
+</section>
+<div class="wrap">
+<section class="sec">
+<h2 class="h2">この現象が起きた災害</h2>
+{% for d in pdis %}<a class="linkrow" href="{{ url('saigai/' ~ d.公開用の名前 ~ '/') }}"><span>{{ d.name }}（{{ d.year }}）</span><span class="mono">→</span></a>{% endfor %}
+</section>
+<section class="sec">
+<h2 class="h2">しくみを動かして見る</h2>
+{% if p['水のモデル図鑑のURL'] %}<a class="btn btn--ink" href="{{ p['水のモデル図鑑のURL'] }}" target="_blank" rel="noopener"><span>水のモデル図鑑で見る</span><span class="mono">→</span></a>
+{% else %}<p class="note" style="margin:0">水のモデル図鑑とのつなぎは準備中です。</p>{% endif %}
+</section>
+</div>
+{% endblock %}

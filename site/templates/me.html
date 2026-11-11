@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block main %}
+<div data-me>
+<section class="qhead gridbg">
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<div style="display:flex;gap:12px;align-items:center">
+<span class="ans__av" style="width:64px;height:64px;font-size:24px;background:var(--pink)" data-me-init>？</span>
+<div style="display:flex;flex-direction:column"><span class="h1 glitch" style="font-size:26px" data-me-name>わたしの答え</span><span class="small mute" data-me-role>まだ答えていません</span></div>
+</div>
+<div class="stats" style="margin-top:16px">
+<div class="stat stat--ink"><span class="stat__k">答えた問い</span><span class="stat__v" data-me-n>0</span></div>
+<div class="stat"><span class="stat__k">使った根拠</span><span class="stat__v" data-me-cards>0</span></div>
+<div class="stat stat--pink"><span class="stat__k">防災士が採用</span><span class="stat__v" data-me-picked>0</span></div>
+</div>
+<p class="small mute" style="margin:10px 0 0">登録はいりません。この端末で出した答えが、ここにまとまります。</p>
+</div>
+</section>
+<div class="wrap">
+<section class="sec">
+<h2 class="h2">未来への問い {{ M.qs|length }}</h2>
+<div class="mygrid">
+{% for t in M.qs %}<a href="{{ url('toi/' ~ t.slug ~ '/') }}" data-me-toi="{{ t.slug }}" title="{{ t.q }}" aria-label="問い{{ t.no }}：{{ t.q }}">{{ t.no }}</a>{% endfor %}
+</div>
+<p class="small mute">ピンクは答えた問い。黒は防災士が採用した答え。</p>
+</section>
+<section class="sec">
+<h2 class="h2">出した答え</h2>
+<div class="qlist" data-me-list></div>
+<div class="note" data-me-empty>まだ答えていません。最初の1問を選んでみましょう。</div>
+<a class="btn btn--pink btn--big" href="{{ url('toi/') }}" style="margin-top:16px"><span>まだ答えていない問いに答える</span><span class="mono">→</span></a>
+</section>
+</div>
+</div>
+{% endblock %}

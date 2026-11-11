@@ -1,0 +1,6 @@
+{
+  "site_name": "HagiiZ 災害レビュー",
+  "base_url": "",
+  "api": "",
+  "_説明": "base_url：公開するアドレス（例 https://review.hagiiz.com）。api：答えの受け皿（Apps ScriptのウェブアプリURL）。空なら試作モード。"
+}

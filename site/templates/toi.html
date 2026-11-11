@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% import "_m.html" as m %}
+{% set desc = t.then ~ ' ' ~ t.q %}
+{% block head %}<script id="hz-cards" type="application/json">{{ cards_js|tojson }}</script>{% endblock %}
+{% block main %}
+<div data-toi="{{ t.slug }}">
+<section class="qhead gridbg">
+{% if t.d %}<img class="qhead__img" src="{{ asset('img/' ~ t.d.img ~ '.jpg') }}" alt="" width="596" height="796">{% endif %}
+<div class="wrap">
+<a class="crumb" href="{{ url('toi/') }}"><span class="mono">←</span>未来への問い</a>
+<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+<span class="label {% if t.kind == '国会' %}label--ink{% else %}label--pink{% endif %}">{{ '国会の問い' if t.kind == '国会' else '災害の教訓' }} {{ t.kno }}</span>
+<span class="small" style="font-weight:900"><span class="blink" style="color:var(--pink)">●</span> 答えを待っている</span>
+{% if t.d %}<a class="small" href="{{ url('saigai/' ~ t.d.公開用の名前 ~ '/') }}">{{ t.d.name }}</a>{% endif %}
+</div>
+<p class="small" style="margin:12px 0 0;font-weight:900">{{ t.h }}</p>
+<h1 class="qhead__q glitch">{{ t.q }}</h1>
+<p class="qhead__then">{{ t.then }}</p>
+{% if t.src %}<span class="qhead__src">もとの資料：{% if t.src.URL %}<a href="{{ t.src.URL }}" target="_blank" rel="noopener">{{ t.src.タイトル }}</a>{% else %}{{ t.src.タイトル }}{% endif %}</span>{% endif %}
+<div class="stats" style="margin-top:14px">
+<div class="stat stat--ink"><span class="stat__k">答え</span><span class="stat__v" data-toi-count>–</span></div>
+<div class="stat"><span class="stat__k">答えた立場</span><span class="stat__v" data-toi-roles>–</span></div>
+<div class="stat stat--pink"><span class="stat__k">防災士が採用</span><span class="stat__v" data-toi-picked>–</span></div>
+</div>
+</div>
+</section>
+
+<div class="wrap two">
+<div>
+<section class="sec">
+<a class="btn btn--pink btn--big btn--pulse" href="#kotaeru"><span>根拠を選んで、答える</span><span class="mono">→</span></a>
+<p class="small mute" style="margin:10px 0 0">根拠カードを選んで1文書くだけ。5分ほどで、すぐにここへ載ります。</p>
+</section>
+<section class="sec">
+<h2 class="h2">みんなの答え</h2>
+<div class="answers" data-answers aria-live="polite"></div>
+<div class="note" data-answers-empty><b>まだ答えがありません。</b><br>最初の答えは、次に来る人の「お手本」になります。</div>
+</section>
+</div>
+<aside class="two__side">
+<section class="sec">
+<h2 class="h2">この問いの根拠カード</h2>
+{% for c in rel %}<div class="ev" style="margin-bottom:8px"><span class="mono">{{ c.id }}</span><span>{{ c.t }}<br><span class="small mute">{{ m.evref(c) }}</span></span></div>{% endfor %}
+{% if t.d %}<a class="linkrow" href="{{ url('saigai/' ~ t.d.公開用の名前 ~ '/konkyo/') }}"><span>根拠カードをすべて見る</span><span class="mono">→</span></a>{% endif %}
+<a class="linkrow" href="{{ url('manabu/') }}"><span>根拠を深く知る：防災士のレッスン</span><span class="mono">→</span></a>
+</section>
+</aside>
+</div>
+
+<section class="gridbg" id="kotaeru" style="border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)">
+<div class="wrap" style="max-width:760px;padding-top:20px;padding-bottom:28px">
+<form class="form" data-answer-form novalidate>
+<h2 class="h1" style="font-size:28px">根拠を選んで、<span class="mark">答える</span></h2>
+<p class="small" style="margin:0;padding:10px 12px;background:var(--ink);color:#fff;font-weight:900">{{ t.q }}</p>
+
+<h3 class="step"><span>1. 根拠カードを選ぶ</span><span class="mono"><span data-pick-count style="color:var(--pink-ink)">0</span> / 2</span></h3>
+<p class="small mute" style="margin:0">一次資料からつくったカードです。2枚まで選べます。</p>
+{% for c in rel %}
+<button type="button" class="pick" data-card="{{ c.id }}" aria-pressed="false"><span class="pick__box" aria-hidden="true"></span><span><span class="pick__t">{{ c.t }}</span><span class="pick__s"><span class="pick__rel">この問いの根拠</span> {{ c.id }}・{% for r in c.refs %}{{ r.t }}{% if not loop.last %}／{% endif %}{% endfor %}</span></span></button>
+{% endfor %}
+{% if others %}
+<details class="fold"><summary>ほかのカード {{ others|length }}枚</summary>
+<div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
+{% for c in others %}
+<button type="button" class="pick" data-card="{{ c.id }}" aria-pressed="false"><span class="pick__box" aria-hidden="true"></span><span><span class="pick__t">{{ c.t }}</span><span class="pick__s">{{ c.id }}・{% for r in c.refs %}{{ r.t }}{% if not loop.last %}／{% endif %}{% endfor %}</span></span></button>
+{% endfor %}
+</div>
+</details>
+{% endif %}
+
+<h3 class="step">2. 答えを1文で</h3>
+<div class="filters" role="group" aria-label="答えの立ち位置" data-chips="stance" style="margin:0">
+{% for s in ['もう答えが出た','一部だけ','まだ','わからない'] %}<button type="button" class="chip" data-v="{{ s }}" aria-pressed="false">{{ s }}</button>{% endfor %}
+</div>
+<label class="field"><span class="sr">答え（80字まで）</span>
+<textarea class="textarea textarea--strong" id="f-answer" name="answer" rows="2" maxlength="80" data-max="80" placeholder="例：（えらんだ根拠）なので、（今の町）は〜だと思う。"></textarea></label>
+<span class="count" data-count-for="f-answer"></span>
+
+<h3 class="step">3. 今への提案を1文で（なくてもOK）</h3>
+<label class="field"><span class="sr">提案（80字まで）</span>
+<textarea class="textarea" id="f-prop" name="proposal" rows="2" maxlength="80" data-max="80" placeholder="例：（だれが）（いつまでに）（何を）する。"></textarea></label>
+<span class="count" data-count-for="f-prop"></span>
+
+<h3 class="step">4. 名前と立場</h3>
+<label class="field"><span class="field__l">表示する名前（ニックネームでOK）</span><input class="input" name="name" maxlength="20" autocomplete="nickname"></label>
+<div class="filters" role="group" aria-label="あなたの立場" data-chips="role" style="margin:0">
+{% for r in ['高校生','大学生','防災士','防災士をめざす','防災団体','研究・仕事','自治体の職員','そのほか'] %}<button type="button" class="chip chip--pink" data-v="{{ r }}" aria-pressed="false">{{ r }}</button>{% endfor %}
+</div>
+<p class="err" data-err hidden role="alert"></p>
+<button type="submit" class="btn btn--pink btn--big btn--center" style="margin-top:8px">答えを出す</button>
+<p class="small mute" style="margin:0">出した答えは、すぐにこのページに載ります。だれかを名指しで責める書き込みは、知らせがあると隠れ、運営が確認します。連絡先は聞きません。<a href="{{ url('about/') }}#rule">ルール</a></p>
+</form>
+
+<div data-done hidden>
+<div class="done"><span class="done__t">答えが載りました。</span><span>あなたの答えは、このページの「みんなの答え」に並んでいます。</span></div>
+<div class="sharecard">
+{% if t.d %}<img class="sharecard__img" src="{{ asset('img/' ~ t.d.img ~ '.jpg') }}" alt="">{% endif %}
+<span class="mono small" style="color:var(--mute);letter-spacing:.12em">HagiiZ 災害レビュー</span>
+<span style="font-size:13px;font-weight:900">{{ t.d.name if t.d else '過去の災害' }}を根拠に、未来の問いに答えた</span>
+<span class="sharecard__q">{{ t.q }}</span>
+<span style="font-size:16px;font-weight:900;line-height:1.6">私の答え：<span data-share-answer></span></span>
+<span class="small" style="font-weight:700">根拠 <span data-share-cards>0</span>枚・<span data-share-name></span></span>
+<span class="sharecard__stamp">回答ずみ</span>
+</div>
+<h3 class="h2">シェアして、ほかの人の答えを呼ぶ</h3>
+{{ m.sharebox((canonical if base else '') ~ '#kotaeru', t.q, asset('img/' ~ (t.d.img if t.d else 'typhoon') ~ '.jpg'), (t.d.name if t.d else '過去の災害') ~ 'を根拠に、未来の問いに答えた') }}
+<p class="small mute">カードから来た人は、この問いの「答える」に直接入れます。</p>
+<a class="btn" href="{{ url('me/') }}" style="margin-top:8px"><span>わたしの答えを見る</span><span class="mono">→</span></a>
+<a class="btn" href="{{ url('toi/') }}" style="margin-top:8px"><span>ほかの問いに答える</span><span class="mono">→</span></a>
+</div>
+</div>
+</section>
+</div>
+{% endblock %}

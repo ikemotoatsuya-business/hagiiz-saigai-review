@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+{% set site = cfg.site_name or "HagiiZ 災害レビュー" %}
+<title>{% if title %}{{ title }}｜{% endif %}{{ site }}</title>
+<meta name="description" content="{{ desc or '過去の災害を根拠に、未来の防災の問いに答える場所。法律と、そのきっかけになった災害を、一次資料から見直します。' }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site }}">
+<meta property="og:title" content="{% if title %}{{ title }}｜{% endif %}{{ site }}">
+<meta property="og:description" content="{{ desc or '過去の災害を根拠に、未来の防災の問いに答える場所。' }}">
+{% if base %}<meta property="og:url" content="{{ canonical }}"><link rel="canonical" href="{{ canonical }}">{% endif %}
+<meta property="og:image" content="{% if base %}{{ base }}/{{ og or 'og.png' }}{% else %}{{ url(og or 'og.png') }}{% endif %}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E0E10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=IBM+Plex+Mono:wght@500;700&family=Klee+One:wght@600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('css/site.css') }}">
+<script>try{var m=localStorage.getItem('hz-motion');if(m==='"still"')document.documentElement.classList.add('still');}catch(e){}</script>
+<script id="hz-config" type="application/json">{{ {"api": api, "base": base} | tojson }}</script>
+{% block head %}{% endblock %}
+</head>
+<body>
+<a class="skip" href="#main">本文へ</a>
+{% if demo %}<div class="demo">公開前の試作です。答えはこの端末だけに保存され、ほかの人には見えません。</div>{% endif %}
+<div class="ticker" aria-hidden="true"><div class="ticker__in">
+{% for _ in range(2) %}
+<span><span class="ticker__dot blink">●</span> 答えを待つ未来への問い {{ M.qs|length }}</span><span>過去の災害を根拠に、答えよう</span>{% for d in M.dis if d.open %}<span>FILE {{ '%02d' % loop.index }} {{ d.name }} 公開中</span>{% endfor %}<span>根拠カード {{ M.cards|length }}枚</span>
+{% endfor %}
+</div></div>
+<header class="hdr">
+<div class="hdr__in">
+<a class="logo" href="{{ url('') }}"><span class="logo__by">HagiiZ</span><span class="logo__name glitch">災害レビュー</span></a>
+<nav class="nav-top" aria-label="メニュー">
+{% for k, t, p in [('board','全体図',''),('saigai','災害','saigai/'),('toi','問い','toi/'),('chiiki','地域','chiiki/'),('manabu','学ぶ','manabu/')] %}
+<a href="{{ url(p) }}"{% if nav == k %} aria-current="page"{% endif %}>{{ t }}</a>
+{% endfor %}
+</nav>
+<a class="hdr__me" href="{{ url('me/') }}">わたしの答え <span class="mono" data-mine-count>0</span></a>
+<button class="motion" type="button" data-motion aria-label="動きを止める" aria-pressed="false">Ⅱ</button>
+</div>
+</header>
+<main id="main">
+{% block main %}{% endblock %}
+</main>
+{% block urgency %}{% endblock %}
+<footer class="foot"><div class="foot__in">
+<span>過去の災害を知り、埋もれた課題を掘り起こし、未来の防災のあり方を議論する場。</span>
+<nav class="foot__nav" aria-label="サイトについて"><a href="{{ url('about/') }}">このサイトについて・ルール</a><a href="{{ url('teikyo/') }}">知らせる・提供する</a><a href="{{ url('hou/') }}">法律の一覧</a><a href="{{ url('saigai/') }}">災害の一覧</a></nav>
+<span>運営：HagiiZ（原則中立）。掲載しているのは資料の情報とリンクです。資料の著作権は各発行元にあります。一括での収集・再配布、AIの学習のための収集はお断りします。</span>
+</div></footer>
+<nav class="nav-bottom" aria-label="メニュー">
+{% for k, t, p in [('board','全体図',''),('saigai','災害','saigai/'),('toi','問い','toi/'),('chiiki','地域','chiiki/'),('manabu','学ぶ','manabu/')] %}
+<a href="{{ url(p) }}"{% if nav == k %} aria-current="page"{% endif %}>{{ t }}</a>
+{% endfor %}
+</nav>
+<script src="{{ asset('js/site.js') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "_m.html" as m %}
+{% block main %}
+<h1 class="sr">HagiiZ 災害レビュー：過去の災害を根拠に、未来の問いに答える</h1>
+<section class="board gridbg" data-board data-threads='{{ threads|tojson }}' aria-label="全体図：過去の災害、法律、未来への問いのつながり">
+<svg class="board__threads" aria-hidden="true"></svg>
+<span class="board__scan" aria-hidden="true"></span>
+<div class="board__in">
+<span class="board__cap">過去の災害 → 法律 → 未来への問い</span>
+
+{% for p in M.pairs if p.open %}
+<div class="board__pair">
+<a class="file" href="{{ url('saigai/' ~ p.d.公開用の名前 ~ '/') }}" data-node="d-{{ p.d.公開用の名前 }}" style="--r:-3deg">
+<span class="pin" aria-hidden="true"></span><span class="tape" aria-hidden="true"></span>
+<span class="file__img"><img src="{{ asset('img/' ~ p.d.img ~ '.jpg') }}" alt="{{ p.d.種類 }}を表す図（画像生成）" width="596" height="796"><span class="file__year">{{ p.d.year }}</span></span>
+<span class="file__meta"><span>FILE {{ '%02d' % loop.index }} 災害</span><span class="label label--pink">公開中</span></span>
+<span class="file__name">{{ p.d.name }}</span>
+</a>
+<a class="law" href="{{ url('hou/' ~ p.l.公開用の名前 ~ '/') }}" data-node="l-{{ p.l.公開用の名前 }}" style="--r:3deg">
+<span class="pin" aria-hidden="true"></span>
+<span class="law__meta">LAW {{ '%02d' % loop.index }} 法律 / {{ p.l.制定年 }}</span>
+<span class="law__name">{{ p.l.法律名 }}</span>
+<span class="small">{{ p.d.name }}の{{ (p.l.制定年|int) - (p.d.year|int) }}年後にできた</span>
+</a>
+</div>
+{% endfor %}
+
+<div class="board__mid">
+<span class="hand board__hand">答えを待っている ↓</span>
+<div class="board__qs" role="list">
+{% for t in M.qs %}
+<a class="qcard" role="listitem" href="{{ url('toi/' ~ t.slug ~ '/') }}" data-node="q-{{ t.slug }}" style="--r:{{ ['-2deg','1.5deg','-1deg','2deg'][loop.index0 % 4] }};animation-delay:{{ (loop.index0 % 6) * 0.3 }}s">
+<span class="qcard__no">未来への問い {{ t.no }}</span>
+<span class="qcard__h">{{ t.h }}</span>
+<span class="qcard__q">{{ t.q }}</span>
+<span class="qcard__foot"><span>答え <span class="mono" data-count="{{ t.slug }}">–</span></span><b>答える→</b></span>
+</a>
+{% endfor %}
+</div>
+</div>
+<a class="btn board__more" href="{{ url('toi/') }}"><span>未来への問い {{ M.qs|length }}件をすべて見る</span><span class="mono">→</span></a>
+
+<div class="board__soonwrap">
+<span class="board__cap">準備中</span>
+<div class="board__soon">
+{% for p in M.pairs if not p.open %}
+<a class="soon" href="{{ url('saigai/') }}#{{ p.d.公開用の名前 }}">
+<span class="soon__img"><img src="{{ asset('img/' ~ p.d.img ~ '.jpg') }}" alt="" width="596" height="796" loading="lazy"></span>
+<span><span class="soon__y">{{ p.d.year }} → {{ p.l.制定年 }}</span><br><span class="soon__n">{{ p.d.name }}</span><br><span class="soon__s">{{ p.l.法律名 }}・準備中</span></span>
+</a>
+{% endfor %}
+</div>
+</div>
+</div>
+</section>
+{% endblock %}
+{% block urgency %}
+{% for d in M.dis if d.open %}{% if loop.first %}{{ m.urgency(d) }}{% endif %}{% endfor %}
+<section class="wrap" style="padding-top:22px;padding-bottom:28px">
+<h2 class="h2">ここは、過去の災害を根拠に、未来の問いに答える場所</h2>
+<div class="cards cards--entry" style="grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))">
+<div class="stat"><span class="stat__k">1. 問いをえらぶ</span><span class="small">災害が残した課題と、法律をつくった国会の議論から生まれた問い。</span></div>
+<div class="stat"><span class="stat__k">2. 根拠カードをえらんで答える</span><span class="small">一次資料からつくったカードを2枚まで。答えは1文。すぐに載ります。</span></div>
+<div class="stat stat--pink"><span class="stat__k">3. 防災士が取り上げる</span><span class="small">集まった答えを、次の動画で防災士が取り上げます。</span></div>
+</div>
+</section>
+{% endblock %}

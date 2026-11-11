@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap">
+{% if d %}<a class="crumb" href="{{ url('saigai/' ~ d.公開用の名前 ~ '/') }}"><span class="mono">←</span>{{ d.name }}</a>{% else %}<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>{% endif %}
+<section class="sec" style="padding-top:8px">
+<h1 class="h1">{% if d %}{{ d.name }}の{% endif %}<span class="mark">資料 {{ items|length }}</span></h1>
+<p class="lead">資料そのものではなく、資料の名前と、どこにあるか（リンク・所蔵先）を並べています。</p>
+<div class="filters" role="group" aria-label="種類で絞り込む" data-filter-group="#slist">
+<button class="chip" type="button" data-filter="" aria-pressed="true">すべて</button>
+{% for k in kinds %}<button class="chip" type="button" data-filter="{{ k }}" aria-pressed="false">{{ k }}</button>{% endfor %}
+</div>
+<input class="input" type="search" placeholder="ことばでさがす（例：高潮、名古屋市）" aria-label="資料をことばでさがす" data-search="#slist">
+</section>
+<section class="sec" id="slist">
+{% for s in items %}{{ m.srcrow(s) }}{% endfor %}
+</section>
+<section class="sec">
+<p style="margin:0 0 12px">ここにない資料（地元の記録集、資料館の展示、体験の記録など）を知っていたら、教えてください。</p>
+<a class="btn" href="{{ url('teikyo/') }}?kind=shiryo"><span>資料を提供する</span><span class="mono">→</span></a>
+</section>
+</div>
+{% endblock %}

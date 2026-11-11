@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block main %}
+<section class="qhead gridbg">
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<h1 class="h1 glitch">防災士から<br><span class="mark">学ぶ</span></h1>
+<p class="qhead__then">未来への問いに答えるための根拠を、防災士の解説で深く知る。動画はレッスンごとに区切ってあり、気になるところから見られます。</p>
+</div>
+</section>
+<div class="wrap">
+{% for l in laws %}
+<section class="sec">
+<span class="label label--ink mono">{% for d in l.disasters %}{{ d.name }} {{ d.year }} → {% endfor %}{{ l.法律名 }} {{ l.制定年 }}</span>
+<div class="video" style="margin-top:12px">
+{% if l.embed %}<iframe src="{{ l.embed }}" title="{{ l.法律名 }}の解説動画" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+{% else %}<svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="#fff" stroke-width="2"></circle><path d="M19 14l16 10-16 10z" fill="#E24F93"></path></svg><span class="small">動画は準備中です</span>{% endif %}
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;margin-top:16px">
+{% for r in l.lessons %}
+<div class="lesson" id="{{ r.レッスンID }}">
+<div class="lesson__h"><span class="mono">L{{ '%02d' % (r.番号|int) }}</span><span style="flex:1;font-size:17px;font-weight:900">{{ r.見出し }}</span><span class="mono small">{{ r.動画のチャプター開始 or '' }}</span></div>
+<div class="lesson__b">
+<span>{{ r['内容（1文）'] }}</span>
+{% if r.cards %}<span class="small" style="font-weight:900">このレッスンで使える根拠カード</span>
+{% for c in r.cards %}<div class="ev"><span class="mono">{{ c.id }}</span><span>{{ c.t }}{% if c.qs %}<br><span class="small">→ {% for t in c.qs[:2] %}<a href="{{ url('toi/' ~ t.slug ~ '/') }}">{{ t.h }}に答える</a>{% if not loop.last %}、{% endif %}{% endfor %}</span>{% endif %}</span></div>{% endfor %}{% endif %}
+</div>
+</div>
+{% endfor %}
+</div>
+</section>
+{% endfor %}
+<p class="small mute" style="padding-bottom:24px">レッスンの内容は、担当の防災士が確認してから公開します。</p>
+</div>
+{% endblock %}

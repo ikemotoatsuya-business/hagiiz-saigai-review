@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% set first_hit = (M.prefs.values()|selectattr('hit')|first) %}
+{% block main %}
+<div data-chiiki data-default="{{ first_hit.code[:2] if first_hit else '01' }}">
+<section class="qhead gridbg">
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<h1 class="h1">あなたの町の<br><span class="mark">防災の計画</span>をひらく</h1>
+<p class="qhead__then">全国{{ M.prefs|length }}都道府県と{{ "{:,}".format(M.prefs.values()|map(attribute="munis")|map("length")|sum) }}市区町村がつくっている「地域防災計画」への入口です。災害のとき、町がどう動くかが書いてあります。</p>
+<label class="field" style="margin-top:14px"><span class="field__l">町の名前でさがす</span><input class="input input--strong" type="search" placeholder="例：名古屋市" data-muni-search></label>
+<p class="small" style="margin:8px 0 0;font-weight:900" data-muni-count aria-live="polite" hidden></p>
+</div>
+</section>
+<div class="wrap">
+<section class="sec" data-prefs-sec>
+<h2 class="h2">都道府県からえらぶ</h2>
+<div class="prefs">
+{% for k, p in M.prefs.items() %}<button type="button" data-pref="{{ k }}" class="{{ 'hit' if p.hit }}" aria-pressed="false">{{ p.short }}</button>{% endfor %}
+</div>
+<p class="small mute">うすいピンクは、公開中の災害で被災した市町村がある都道府県です。</p>
+</section>
+<section class="sec">
+{% for k, p in M.prefs.items() %}
+<div data-pref-box="{{ k }}" hidden>
+<h2 class="h2">{{ p.name }}</h2>
+<div style="border:2px solid var(--ink)">
+<div class="muni" style="background:var(--ink);color:#fff" data-text="{{ p.name }}">
+<span class="muni__n">{{ p.name }}の計画</span>
+{% if p.url %}<a class="muni__l" href="{{ p.url }}" target="_blank" rel="noopener" style="color:#fff">計画をひらく →</a>{% else %}<span class="muni__l" style="color:#C9C9D2;font-weight:700">リンク準備中</span>{% endif %}
+</div>
+{% for code, mu in p.munis.items() %}
+<div class="muni" data-text="{{ mu.name }}">
+<div style="display:flex;flex-direction:column"><span class="muni__n">{{ mu.name }}</span>{% for d in mu.dis %}<a class="muni__s" href="{{ url('saigai/' ~ d.公開用の名前 ~ '/ima/') }}">{{ d.name }}で被災</a>{% endfor %}</div>
+{% if mu.url %}<a class="muni__l" href="{{ mu.url }}" target="_blank" rel="noopener">計画をひらく →</a>{% else %}<span class="muni__l muni__l--none">リンク準備中</span>{% endif %}
+</div>
+{% endfor %}
+{% if not p.munis %}<div class="muni"><span class="muni__s">市区町村の一覧は、リンクの取りこみが終わると、ここに並びます。</span></div>{% endif %}
+</div>
+</div>
+{% endfor %}
+</section>
+<section class="sec">
+<h2 class="h2">リンクが切れていたら</h2>
+<p style="margin:0 0 12px">町のサイトが変わると、リンクが開かなくなることがあります。見つけたら教えてください。</p>
+<a class="btn" href="{{ url('teikyo/') }}?kind=link"><span>リンク切れを知らせる</span><span class="mono">→</span></a>
+<p class="small mute">計画のよしあしで色分けや順位づけはしません。</p>
+</section>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap">
+<a class="crumb" href="{{ url('') }}"><span class="mono">←</span>全体図</a>
+<section class="sec" style="padding-top:8px">
+<h1 class="h1">法律を変えた<br><span class="mark">災害ファイル</span></h1>
+<p class="lead">いま開けるのは{{ M.dis|selectattr('open')|list|length }}つ。ほかは準備ができしだい公開します。</p>
+<div class="filters" role="group" aria-label="種類で絞り込む" data-filter-group="#dlist">
+<button class="chip" type="button" data-filter="" aria-pressed="true">すべて</button>
+{% for k in M.dis|map(attribute='種類')|unique %}<button class="chip" type="button" data-filter="{{ k }}" aria-pressed="false">{{ k }}</button>{% endfor %}
+</div>
+<div class="cards" id="dlist">
+{% for d in M.dis %}{{ m.dcard(d, url, asset, loop.index) }}{% endfor %}
+<a class="dcard dcard--soon" href="{{ url('teikyo/') }}?kind=request" style="justify-content:center;align-items:center;min-height:300px;padding:16px;text-align:center" data-tags="">
+<span class="mono" style="font-size:44px;color:var(--gray);line-height:1">+</span>
+<span style="font-size:14px;font-weight:900;color:var(--mute)">調べてほしい災害を<br>知らせる</span>
+</a>
+</div>
+</section>
+<p class="small mute" style="padding-bottom:24px">絵は写真ではなく、災害の種類ごとに画像生成でつくった図です。実際の被害のようすを写したものではありません。準備中の災害は、公開するときに一次資料で確認します。</p>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "_m.html" as m %}
+{% block main %}
+<div class="wrap">
+<a class="crumb" href="{{ url('saigai/' ~ d.公開用の名前 ~ '/') }}"><span class="mono">←</span>{{ d.name }}</a>
+<section class="sec" style="padding-top:8px">
+<h1 class="h1">{{ d.name }}の<br><span class="mark">根拠カード {{ d.cards|length }}枚</span></h1>
+<p class="lead">未来への問いに答えるときに使うカードです。1枚ずつ、もとになった一次資料が付いています。</p>
+<input class="input" type="search" placeholder="カードをことばでさがす" aria-label="カードをことばでさがす" data-search="#clist" style="margin-top:14px">
+</section>
+<section class="sec" id="clist" style="display:flex;flex-direction:column;gap:12px">
+{% for c in d.cards %}
+<div class="pick" style="cursor:default" data-text="{{ c.t }}" id="{{ c.id }}">
+<span class="pick__box mono" style="width:auto;padding:0 6px;font-size:12px">{{ c.id }}</span>
+<span><span class="pick__t">{{ c.t }}</span><span class="pick__s">もとの資料：{{ m.evref(c) }}</span>
+{% if c.qs %}<span class="pick__s">使える問い：{% for t in c.qs %}<a href="{{ url('toi/' ~ t.slug ~ '/') }}">{{ t.h }}</a>{% if not loop.last %}、{% endif %}{% endfor %}</span>{% endif %}</span>
+</div>
+{% endfor %}
+</section>
+<p class="small mute" style="padding-bottom:24px">カードの文は、資料を高校生にもわかる言葉に言いかえたものです。正確な表現は、もとの資料で確かめてください。</p>
+</div>
+{% endblock %}

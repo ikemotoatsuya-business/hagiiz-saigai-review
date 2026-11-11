@@ -1,0 +1,55 @@
+{# 共通の部品 #}
+
+{% macro urgency(d) %}
+<section class="urgency" aria-label="時間">
+<div class="urgency__in" data-since="{{ d.発生年月日 }}">
+<div class="urgency__row"><span class="urgency__k">{{ d.name }}から</span>
+<span class="urgency__clock"><span class="big flick" data-y>–</span><span class="u">年</span> <span data-d>–</span><span class="u">日</span> <span data-t>--:--:--</span></span></div>
+{% if d.year|int <= 1980 %}<span class="urgency__w">当時小学生だった人は、いま <span class="mono" data-witness>–</span> 歳以上。直接話を聞ける時間は限られている。</span>{% endif %}
+</div>
+</section>
+{% endmacro %}
+
+{% macro dcard(d, url, asset, i) %}
+<a class="dcard{% if d.open %} dcard--open{% else %} dcard--soon{% endif %}" href="{% if d.open %}{{ url('saigai/' ~ d.公開用の名前 ~ '/') }}{% else %}#{{ d.公開用の名前 }}{% endif %}" id="{{ d.公開用の名前 }}" style="animation-delay:{{ i * 0.07 }}s" data-tags="{{ d.種類 }}"{% if not d.open %} aria-disabled="true"{% endif %}>
+<span class="dcard__img"><img src="{{ asset('img/' ~ d.img ~ '.jpg') }}" alt="{{ d.種類 }}を表す図（画像生成）" loading="lazy" width="596" height="796"><span class="dcard__no">FILE {{ '%02d' % i }}</span><span class="dcard__year">{{ d.year }}</span></span>
+<span class="dcard__body"><span class="dcard__name">{{ d.name }}</span><span class="dcard__type">{{ d.種類 }}</span><span class="dcard__cta">{% if d.open %}公開中・ひらく →{% else %}準備中{% endif %}</span></span>
+</a>
+{% endmacro %}
+
+{% macro qrow(t, url) %}
+<a class="qrow" href="{{ url('toi/' ~ t.slug ~ '/') }}" data-tags="{{ t.kind }},{{ t.tags|join(',') }}">
+<span class="qrow__top"><span class="label {% if t.kind == '国会' %}label--ink{% else %}label--pink{% endif %}">{{ '国会の問い' if t.kind == '国会' else '教訓' }} {{ t.kno }}</span><span>答え <span class="mono" data-count="{{ t.slug }}">–</span></span></span>
+<span class="qrow__h">{{ t.h }}</span>
+<span class="qrow__q">{{ t.q }}</span>
+<span class="qrow__foot"><span class="mute">{{ t.d.name if t.d else '' }}</span><b>答える →</b></span>
+</a>
+{% endmacro %}
+
+{% macro srcrow(s) %}
+<div class="src" data-tags="{{ s.種類 }}" data-text="{{ s.タイトル }} {{ s['作成者・発行者'] }} {{ s['1行の説明'] }}">
+{% if s.URL %}<a class="src__t" href="{{ s.URL }}" target="_blank" rel="noopener">{{ s.タイトル }}</a>{% else %}<span class="src__t">{{ s.タイトル }}</span>{% endif %}
+<span class="src__m">{{ s['作成者・発行者'] }}{% if s.発行年 %}・{{ s.発行年 }}{% endif %}・{{ s.種類 }}・{{ s.一次か二次か }}資料{% if not s.URL and s['所蔵・入手先'] %}・所蔵：{{ s['所蔵・入手先'] }}{% endif %}</span>
+{% if s['1行の説明'] %}<span class="src__d">{{ s['1行の説明'] }}</span>{% endif %}
+</div>
+{% endmacro %}
+
+{% macro evref(c) %}{% for r in c.refs %}{% if r.u %}<a href="{{ r.u }}" target="_blank" rel="noopener">{{ r.t }}</a>{% else %}{{ r.t }}{% endif %}{% if not loop.last %}／{% endif %}{% endfor %}{% endmacro %}
+
+{% macro sharebox(url_, question, img, lead) %}
+<div class="share" data-share data-url="{{ url_ }}" data-question="{{ question }}" data-img="{{ img }}" data-lead="{{ lead }}">
+<button type="button" class="s-ig" data-app="ig"><span class="mono">IG</span>Instagram<br>ストーリーズ</button>
+<button type="button" class="s-tt" data-app="tt"><span class="mono">TT</span>TikTok</button>
+<button type="button" data-app="x"><span class="mono">X</span>ポストする</button>
+<button type="button" data-app="line"><span class="mono">LINE</span>友だちに送る</button>
+<button type="button" data-app="threads"><span class="mono">@</span>Threads</button>
+<button type="button" class="s-url" data-app="copy"><span class="mono">URL</span>リンクを<br>コピー</button>
+</div>
+{% endmacro %}
+
+{% macro entry(href, title, desc, n, art, d) %}
+<a class="ecard" href="{{ href }}">
+<span class="ecard__art art--{{ art }}"><svg viewBox="0 0 100 80" aria-hidden="true"><path d="{{ d }}"></path></svg><span class="ecard__n">{{ n }}</span></span>
+<span class="ecard__body"><span class="ecard__t">{{ title }}</span><span class="ecard__d">{{ desc }}</span></span>
+</a>
+{% endmacro %}

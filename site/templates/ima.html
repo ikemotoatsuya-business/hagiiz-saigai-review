@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="wrap">
+<a class="crumb" href="{{ url('saigai/' ~ d.公開用の名前 ~ '/') }}"><span class="mono">←</span>{{ d.name }}</a>
+<section class="sec" style="padding-top:8px">
+<h1 class="h1">被災した地域は、<br><span class="mark">いま</span></h1>
+<p class="lead">{{ d.name }}で被災した当時の町が、いまどの市町村にあたるか。その市町村の地域防災計画（災害のとき、町がどう動くかを書いた計画）へ進めます。</p>
+</section>
+<section class="sec">
+<h2 class="h2">当時の町 → いまの市町村 {{ d.munis|length }}</h2>
+<div style="border:2px solid var(--ink)">
+{% for mu in d.munis %}
+<div class="muni">
+<div style="display:flex;flex-direction:column"><span class="muni__n">{{ mu.今の自治体名 }}</span><span class="muni__s">当時：{{ mu.当時の名称 }}</span></div>
+{% if mu.url %}<a class="muni__l" href="{{ mu.url }}" target="_blank" rel="noopener">計画をひらく →</a>{% else %}<span class="muni__l muni__l--none">リンク準備中</span>{% endif %}
+</div>
+{% endfor %}
+</div>
+<p class="small mute">当時の名称といまの市町村の対応は、確認中のものを含みます。計画のよしあしで色分けや順位づけはしません。</p>
+<a class="btn" href="{{ url('chiiki/') }}" style="margin-top:12px"><span>全国の地域防災計画をさがす</span><span class="mono">→</span></a>
+</section>
+<section class="sec">
+<h2 class="h2">いま、この地域で活動している防災団体</h2>
+<div class="note">
+<p style="margin:0 0 10px;font-size:18px;font-weight:900;line-height:1.5">まだ登録がありません。最初の1団体になりませんか。</p>
+<p style="margin:0 0 12px">掲載は無料です。順位や評価はつけません。運営が確認してから載せます。</p>
+<a class="btn btn--pink" href="{{ url('teikyo/') }}?kind=dantai"><span>団体の掲載を申請する</span><span class="mono">→</span></a>
+</div>
+</section>
+</div>
+{% endblock %}
